@@ -1,0 +1,418 @@
+
+<!DOCTYPE html>
+<!--HTML5 doctype-->
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+        <script type="text/javascript" charset="utf-8" src="intelxdk.js"></script>
+        <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+
+        <script type="text/javascript" language="javascript">
+            // This event handler is fired once the AppMobi libraries are ready
+            function onDeviceReady() {
+                //use AppMobi viewport to handle device resolution differences if you want
+               if (parseFloat(device.version) >= 7.0) { document.body.style.marginTop = "20px"; }
+                //hide splash screen now that our app is ready to run
+                AppMobi.device.hideSplashScreen();
+                setTimeout(function(){
+                    $.ui.launch();
+                },50);
+            }
+
+            //initial event handler to detect when appMobi is ready to roll
+            document.addEventListener("appMobi.device.ready",onDeviceReady,false);
+            var iabRef = null;
+
+    function iabLoadStart(event) {
+        alert(event.type + ' - ' + event.url);
+    }
+
+    function iabLoadStop(event) {
+        alert(event.type + ' - ' + event.url);
+    }
+
+    function iabClose(event) {
+         alert(event.type);
+         iabRef.removeEventListener('loadstart', iabLoadStart);
+         iabRef.removeEventListener('loadstop', iabLoadStop);
+         iabRef.removeEventListener('exit', iabClose);
+    }
+            
+            $(document).on('focus', 'input, textarea', function() {
+            setTimeout(function() {
+                window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
+            }, 0);
+        });
+    
+        </script> 
+
+        <script src="js/appframework.ui.min.js"></script>
+        <script>
+            $.ui.autoLaunch=false;
+            $.ui.useOSThemes=false;
+            //$.ui.blockPageScroll();
+            $(document).ready(function(){
+                if($.ui.useOSThemes&&!$.os.ios&&$("#afui").get(0).className!=="ios")
+                $("#afui").removeClass("ios");
+            });
+        </script>
+        <link href="css/icons.css" rel="stylesheet" type="text/css"></link>
+        <link href="css/af.ui.css" rel="stylesheet" type="text/css"></link>
+    </head>
+    <!-- archivos de la calculadora-->
+    <script>
+        function cs(){
+    	   //alert("hola");
+        	var panni=0
+        	var pmilza=0
+        	var ppiastrine=0
+        	var pbasofili=0
+        	var peosinofili=0
+        	var pmieloblasti=0
+        	var a=0
+        	var b=0
+        	var c=0
+        	var d=0
+        	var e=0
+        	var f=0
+        	var euro=0
+        	var calcolosokal=0
+        	panni=$("#Anni").val();
+        	pmilza=($("#Milza").val())*10;
+        	ppiastrine=$("#Piastrine").val();
+        	pbasofili=($("#Basofili").val())*10;
+        	peosinofili=($("#Eosinofili").val())*10;
+        	pmieloblasti=($("#Mieloblasti").val())*10;
+    
+    		a=0.0116*(panni-43.4);
+    		b=0.0345*(pmilza/10-7.51);
+    		c=0.188*((ppiastrine/700)*(ppiastrine/700)-0.563);
+    		d=0.0887*(pmieloblasti/10-2.1);
+    		calcolosokal=Math.exp(a+b+c+d);
+    		calcolosokal=Math.floor(calcolosokal*100)/100
+
+    		if (panni<50){I=0;}
+    		if (panni>49){I=1;}
+    		if (pbasofili<30){L=0;}
+    		if (pbasofili>29){L=1;}
+    		if (ppiastrine<1500){M=0;}
+    		if (ppiastrine>1499){M=1;}
+    		a=0.6666*I;
+    		b=0.042*(pmilza/10);
+    		c=0.0584*(pmieloblasti/10);
+    		d=0.0413*(peosinofili/10);
+    		e=0.2039*L;
+    		f=1.0956*M;
+    		euro=(a+b+c+d+e+f)*1000;
+    		euro=Math.floor(euro*100)/100
+
+    		if (calcolosokal < 0.8){$("#rissokal3").val(calcolosokal+" RIESGO BAJO  \n78%(CCyR 12 m.)  \n90.8% (EFS 6 y)  \n94% (OS 6 y)");$("#rissokal").val(calcolosokal+" RIESGO BAJO \n78% (CCyR 12 m.)  \n90.8% (EFS 6 y)  \n94% (OS 6 y)");}
+    		else if (calcolosokal >= 0.8 && calcolosokal <= 1.2){$("#rissokal3").val(calcolosokal+" RIESGO INTERMEDIO \n68% (CCyR 12 m.)  \n81.3% (EFS 6 y)  \n87% (OS 6 y)");$("#rissokal").val(calcolosokal+" RIESGO INTERMEDIO \n68% (CCyR 12 m.)  \n81.3% (EFS 6 y)  \n87% (OS 6 y)");}
+    		else if (calcolosokal > 1.2){$("#rissokal").val(calcolosokal+" RIESGO ALTO \n51% (CCyR 12 m.) \n67.3% (EFS 6 y) \n76% (OS 6 y)");$("#rissokal3").val(calcolosokal+" RIESGO ALTO \n51% (CCyR 12 m.)\n67.3% (EFS 6 y)\n76% (OS 6 y)");}
+            
+    		if (euro < 781){$("#riseuro").val(euro+" RIESGO BAJO • 86%(CCyR 18 m.)");$("#riseuro3").val(euro+" RIESGO BAJO • 86%(CCyR 18 m.)");}
+    		else if (euro >= 781 && euro <= 1480){$("#riseuro").val(euro+" RIESGO INTERMEDIO • 86%(CCyR 18 m.)");$("#riseuro3").val(euro+" RIESGO INTERMEDIO •  86%(CCyR 18 m.)");}
+    		else if (euro >= 1480){$("#riseuro").val(euro+" RIESGO ALTO • 65.8%(CCyR 18 m.)");$("#riseuro3").val(euro+" RIESGO ALTO • 65.8%(CCyR 18 m.)");}
+    	
+
+		}
+    </script>
+    <script>
+        function cs2(){
+            var a=0;
+            var b=0;
+            var c=0;
+            var pmilza=0;
+            var pbasofili=0;
+            var probeutos=0;
+            var eutossc=0;
+            pmilza=$("#Milza2").val();
+            pbasofili=$("#Basofili2").val();
+    
+            
+            
+            if (pmilza < 0 || pmilza > 50) {$("#Milza2").val("Spleen value not in range 0-50");return}
+            if (pbasofili < 0 || pbasofili > 60) {$("#Basofili2").val("Basophil count not in range 0-60");return}
+
+            
+            a = (-2.1007);
+            b = 0.0700 * pbasofili;
+            c = 0.0402 * pmilza;
+            
+            probeutos=(Math.exp(a+b+c)) / (1 + Math.exp(a+b+c));
+            probeutos=Math.floor(probeutos*100)/100;
+
+            $("#probeutos").val(probeutos);
+            $("#probeutos3").val(probeutos);
+            
+            eutossc=7*pbasofili+4*pmilza;
+            eutossc=Math.floor(eutossc*100)/100;
+
+            $("#riseutos").val(eutossc);
+            $("#riseutos3").val(eutossc);
+            
+           
+            if (eutossc > 87) {$("#teutos").val("RIESGO ALTO");$("#teutos3").val("RIESGO ALTO");}
+            else if (eutossc <= 87) {$("#teutos").val("RIESGO BAJO");$("#teutos3").val("RIESGO BAJO 86%(CcyR 18 m.)");}
+        }
+    </script>
+    <script>
+        function borrarDatos()
+        {
+            $("#Anni").val("");
+        	$("#Milza").val("");
+        	$("#Piastrine").val("");
+        	$("#Basofili").val("");
+        	$("#Eosinofili").val("");
+        	$("#Mieloblasti").val("");
+            $("#Milza2").val("");
+            $("#Basofili2").val("");
+            $("#teutos").val("");
+            $("#probeutos").val("");
+            $("#riseutos").val("");
+            $("#rissokal").val("");
+            $("#riseuro").val("");
+            $("#rissokal3").val("");
+        	$("#riseuro3").val("");
+        	$("#teutos3").val("");
+        	$("#probeutos3").val("");
+        	$("#riseutos3").val("");
+            $("#resultadoGenerarDatos").html("");
+            $("#correo").val("");
+        }
+    </script>
+    <script>
+        function generarDatos()
+        {
+            
+            var rissokal3=$("#rissokal3").val();
+        	var riseuro3=$("#riseuro3").val();
+        	var teutos3=$("#teutos3").val();
+        	var probeutos3=$("#probeutos3").val();
+        	var riseutos3=$("#riseutos3").val();
+            var correo=$("#correo").val();
+            
+            $.ajax({
+                type:"GET",
+                url:"http://cdc.gatolocostudios.com/Calculadora/funciones.php?accion=generarDatos"
+                +"&rissokal3="+rissokal3
+                +"&riseuro3="+riseuro3
+                +"&teutos3="+teutos3
+                +"&probeutos3="+probeutos3
+                +"&riseutos3="+riseutos3
+                +"&correo="+correo,
+                dataType:"html",
+                contentType:"application/json; charset=utf-8",
+                data:$(this).serialize(),
+                success:function(response)
+                {
+                    
+                    $("#resultadoGenerarDatos").html(response);
+                },
+                error:function(response) {
+                    alert("Data not found");
+                }
+                
+            })
+        }
+    </script>
+    <body>
+        <div id="afui" class='ios7'>
+          
+<div id="header"></div>
+          
+<div id="content" style="">
+	          
+	<div class="panel" title="Main" data-nav="nav_0" id="page_0" selected="selected" style="">
+		<a class="button" href="#" style="" data-appbuilder-object="button" data-position="static">Hello World</a>
+	</div>
+	<div class="panel" title="New Page1" data-nav="nav_0" id="page_1" data-appbuilder-object="page" style="">
+    <form class="est_fuente">
+           <ul data-role="listview" data-inset="true">
+            <li class="ui-field-contain">
+                <label for="textinput-1">Edad:</label>
+                <input type="number" name="Anni" id="Anni" placeholder="Años" value="">
+            </li>
+            <li class="ui-field-contain">
+                <label for="textinput-1">Bazo:</label>
+                <input type="number" name="Milza" id="Milza" placeholder="Max. Distancia de la reja costal en cm" value="">
+            </li>
+            <li class="ui-field-contain">
+                <label for="textinput-1">Plaquetas:</label>
+                <input type="number" name="Piastrine" id="Piastrine" placeholder="(ej. 350.000/ μL = 350)" value="">
+            </li>
+            <li class="ui-field-contain">
+                <label for="textinput-1">Basófilos en sangre:</label>
+                <input type="number" name="Basofili" id="Basofili" placeholder="%" value="">
+            </li>
+            <li class="ui-field-contain">
+                <label for="textinput-1">Eosinófilos en sangre:</label>
+                <input type="number" name="Eosinofili" id="Eosinofili" placeholder="% " value="">
+            </li>
+            <li class="ui-field-contain">
+                <label for="textinput-1">Mieloblastos en sangre:</label>
+                <input type="number" name="Mieloblasti" id="Mieloblasti" placeholder="% " value="">
+            </li>
+            <a data-role="button" data-theme="b" href="" onclick="cs();return false;">Calcular</a>
+            <li class="ui-field-contain">
+                <h1>Escala Sokal:</h1>
+               
+                    <textarea class"hola" type="text" name="rissokal" id="rissokal" placeholder="Resultado" value="" readonly></textarea>
+                    
+                    
+                    <a class="pop2"  data-icon="arrow-d" style="text-align:center; display:block; margin-left:auto; margin-right:auto" data-role="button" data-theme="a"  href="#popupBasic" data-rel="popup">Información Sokal</a>
+
+                <div data-role="popup" id="popupBasic">
+                    <p>
+                        RIESGOS:<br />
+                        ALTO: ≥ 1.2<br />
+                        INTERMEDIO: 0.8 – 1.2<br />
+                        BAJO: ≤ 0.8<br />
+                    </p>
+                </div>
+            </li>
+            <li class="ui-field-contain">
+                <h1>Escala Hasford:</h1>
+
+                    <!--
+<input type="text" name="riseuro" id="riseuro" placeholder="Result Hasford" value="" readonly>
+-->
+                    <textarea type="text" cols="40" rows="8" name="riseuro" id="riseuro" placeholder="Resultado" readonly></textarea>
+                    <a class="pop2" data-icon="arrow-d"  style="text-align:center; display:block; margin-left:auto; margin-right:auto" data-role="button" data-theme="a" href="#popupBasic2" data-rel="popup">Información Hasford</a>
+       
+                <div data-role="popup" id="popupBasic2">
+                    <p>
+                        RIESGOS:<br />
+                        ALTO:  ≥1480<br />
+                        INTERMEDIO: 781 – 1480<br />
+                        BAJO:  ≤781<br />
+
+                    </p>
+                </div>
+                
+                
+            </li>
+            <a data-role="button" data-theme="b" href="" onclick="borrarDatos();return false;">Limpiar</a>
+        </ul>
+     </form>
+    </div>
+	<div class="panel" title="New Page2" data-nav="nav_0" id="page_2" data-appbuilder-object="page" style="">
+    <form class="est_fuente"> 
+         <ul data-role="listview" data-inset="true">
+           <li class="ui-field-contain">
+            <label for="textinput-1">Bazo:</label>
+            <input type="number" min="0" max="60" required="required" name="Milza2" id="Milza2" placeholder="Max. Distancia desde reja costal en cm" value="">
+           </li>
+                                   
+            <li class="ui-field-contain">
+                <label for="textinput-1">Basófilos en sangre:</label>
+                <input type="number" name="Basofili2" id="Basofili2" placeholder="%" value="">
+            </li>
+            <a data-role="button" data-theme="b" href="" onclick="cs2();return false;">Calcular</a>
+            <li class="ui-field-contain">
+                <label for="textinput-1">Grupo de riesgo EUTOS:</label>
+                <textarea id="teutos" cols="40" rows="8" name="textarea"></textarea>
+                <!--
+<input type="text" name="teutos" id="teutos" placeholder="Result EUTOS Risk" value="" readonly >
+-->
+                <a class="pop2" data-icon="arrow-d"  style="text-align:center; display:block; margin-left:auto; margin-right:auto" data-role="button" data-theme="a" href="#popupBasic3" data-rel="popup">Información Eutos</a>
+              
+                <div data-role="popup" id="popupBasic3">
+                    <p>
+                        RIESGOS:<br />
+                        ALTO:  >87<br />
+           		BAJO:  ≤87<br />
+                    </p>
+                </div>
+            </li>
+            <li class="ui-field-contain">
+                <label for="textinput-1">Probabilidad de no lograr CCyR a los 18 meses con Imatinib:</label>
+                <br />
+                
+                <textarea type="text" name="probeutos" id="probeutos" placeholder="Resultado" value="" readonly ></textarea>
+            </li>
+            <li class="ui-field-contain">
+                <label for="textinput-1">Puntaje EUTOS:</label>
+                <br />
+                
+                <textarea type="text" name="riseutos" id="riseutos" placeholder="Resultado" value="" readonly ></textarea>
+            </li>
+            <a data-role="button" data-theme="b" href="" onclick="borrarDatos();return false;">Limpiar</a>
+            
+          </ul>  
+         </form>
+    </div>
+	<div class="panel" title="New Page3" data-nav="nav_0" id="page_3" data-appbuilder-object="page" style="">
+    <form class="est_fuente">
+           <ul data-role="listview" data-inset="true">
+            <li class="ui-field-contain">
+                <label for="textinput-1">Escala Sokal:</label>
+              
+                <br />
+                <textarea type="text" name="rissokal3" id="rissokal3" placeholder="Resultado" value="" readonly></textarea></textarea>
+            </li>
+            <li class="ui-field-contain">
+                <label for="textinput-1">Escala Hasford:</label>
+              
+                <br />
+                <textarea type="text" name="riseuro3" id="riseuro3" placeholder="Resultado" value="" readonly></textarea>
+            </li>
+            <li class="ui-field-contain">
+                <label for="textinput-1">Grupo de riesgo EUTOS:</label>
+              
+                <br />
+                <textarea type="text" name="teutos3" id="teutos3" placeholder="Resultado" value="" readonly></textarea>
+            </li>
+            <li class="ui-field-contain">
+                <label for="textinput-1">Probabilidad de no lograr CCyR a los 18 meses con Imatinib:</label>
+               
+                <br />
+                <textarea type="text" name="probeutos3" id="probeutos3" placeholder="Resultado" value="" readonly></textarea>
+            </li>
+            <li class="ui-field-contain">
+                <label for="textinput-1">Puntaje EUTOS:</label>
+               
+                <br />
+                <textarea type="text" name="riseutos3" id="riseutos3" placeholder="Resultado" value="" readonly></textarea>
+            </li>
+            <li class="ui-field-contain">
+                <label for="textinput-1">Enviar a:</label>
+               
+                <br />
+                <input type="text" name="correo" id="correo" placeholder="Ingrese el Correo" value="">
+            </li>
+            <div id="resultadoGenerarDatos">
+            </div>
+            <a data-role="button" data-theme="b" data-icon="mail" href="" onclick="generarDatos();return false;">Enviar</a>
+          </ul> 
+         </form>   
+    </div>
+	<div class="panel" title="New Page4" data-nav="nav_0" id="page_4" data-appbuilder-object="page" style=""></div>
+</div>
+          
+<div id="navbar">
+	<a href="#page_0" class="icon home">Home</a><a href="#page_1" class="icon bug">S_H</a><a href="#page_2" class="icon calendar">Eutos</a><a href="#page_3" class="icon chat">Resultados</a><a href="hola.html"  data-persist-ajax="true" data-refresh-ajax="true" title="Remote Page" data-pull-scroller="true" class="icon check">Tablas</a><a href="http://www.AppFramework.com" target="_blank">Open a new page</a>
+    <a href="#" onclick="window.open('http://www.cdclaboratorio.com','_self','location=yes')">http://www.ncbi.nlm.nih.gov</a>
+</div>
+        
+<header id="header_0" data-appbuilder-object="header">
+	     <a id="backButton" href="#" class="button back" style="visibility: visible; ">Back</a>
+	<h1 id="pageTitle" class="">
+		test
+	</h1>
+	     
+</header>
+<!--<nav id="nav_0" data-appbuilder-object="nav">
+	     
+	<h1>
+		Side Menu
+	</h1>
+	     
+</nav>-->
+        </div>
+    </body>
+</html>
